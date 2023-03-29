@@ -1,6 +1,6 @@
 # Processing tweets for cybersecurity threat awareness
 
-## Introduction
+# Introduction
 
 ### Background
 Security annalists need to be aware of developments in updates,patches,vulnerabilities and attacks to properly do security

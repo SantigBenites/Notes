@@ -62,22 +62,13 @@ The final attack is about a hostPath namespace breakout in Kubernetes. An attack
 Taken this into consideration the authors infer that the common denominator across all of these attacks is their relation to privilege escalation. Therefore they conclude that better usage of the principle of least privilege when managing a SSCS within the utilised DevSecOps model K8s, is essential to solving these problems.
 For each attack the authors present some specific solutions that can solve the problems at hand.
 
-## Protection from deploying malicious application
+(1) To prevent the deployment of malicious applications and the disclosure of confidential information, the most important safeguard is to restrict user privileges. Therefore the authors suggest to establish service accounts that are linked to particular namespaces, thereby preventing users from deploying containers beyond their designated zone.
 
-To prevent the deployment of malicious applications and the disclosure of confidential information, the most important safeguard is to restrict user privileges. Therefore the authors suggest to establish service accounts that are linked to particular namespaces, thereby preventing users from deploying containers beyond their designated zone.
+(2) To prevent Protection from the CI/CD manipulation, it is recommended to restrict access to the Jenkins instance. The authors recommend to achieve this by using a service account to trigger Jenkins jobs, while limiting other functions to admin roles only, which should only be used if necessary.
 
-## Protection from the CI/CD manipulation
+(3) To prevent Cluster IP exposure mitigation, it is important to implement service accounts within the K8s cluster. Therefore the authors advise to assign service accounts to specific resources within designated namespaces and to closely monitor the activities of users who have access to these internal resources to detect any malicious behaviour.
 
-To prevent unauthorised access and manipulation of the CI/CD pipeline, it is recommended to restrict access to the Jenkins instance. The authors recommend to achieve this by using a service account to trigger Jenkins jobs, while limiting other functions to admin roles only, which should only be used if necessary.
-
-## Cluster IP exposure mitigation
-
-To prevent external exposure of the IP address of an internal K8s resource, it is important to implement service accounts within the K8s cluster. Therefore the authors advise to assign service accounts to specific resources within designated namespaces and to closely monitor the activities of users who have access to these internal resources to detect any malicious behaviour.
-
-## Host Path volume escalation mitigation
-
-To prevent a hostPath volume namespace breakout, the authors recommend to restrict CRUD privileges to higher-level accounts. Lower-level accounts that require CRUD privileges must authenticate as a high-level user to perform their tasks. 
-
+(4) To prevent a hostPath volume namespace breakout, the authors recommend to restrict CRUD privileges to higher-level accounts. Lower-level accounts that require CRUD privileges must authenticate as a high-level user to perform their tasks. 
 Additionally, the authors recommend acquiring dedicated storage to avoid the need for deploying hostPath volumes. Instead, hosting the storage on another machine that is not part of the main cluster would enhance the security of the system.
 
 # CONCLUSIONS

@@ -135,7 +135,7 @@ Protocol:
 Discovery:
 - Probe - Used to define security parameters
 - Authentication Request - Used for backward compatibility with WEP
-- Association Connection - Used to setup connection with AP with defined security parameters
+- Association Request/Response - Used to setup connection with AP with defined security parameters
 
 Authentication:
 - EAP (Extensible Authentication protocol) - Station <-> AP
@@ -145,7 +145,7 @@ Authentication:
 Key Management:
 - Creates Keys for the station
 - Both sides have 4 things
-  1. PMK (Pair Wise Master Key)
+  1. PMK (Pairwise Transient Key)
   2. ANonce (Authentication nonce)
   3. SNonce 
   4. Both Mac Addresses
@@ -158,6 +158,15 @@ Key Management:
 - Outside of this the AP will create a GTK(Group Temporal Key) which it will send to the station with a MIC, using the KEK (Key Encryption Key)
 - The station will respond to acknowledge the GTK 
 
+Key Hierarchy:
+- PSK(Pre shared key) + MSK(Master shared key)
+- PMK(Pairwise master key)
+- 4 way handshake
+- PTK(public transient key)
+- EAPOL Keys (Confirmation/Encryption) + TK(Temporal Key) 
+
+GTK(Group transient key) is created by AP based on the key GMK(Group Master key) which is stored in AP
+
 Sending Data
 
 Connection termination
@@ -165,16 +174,16 @@ Connection termination
 ## TKIP
 
 Combines 2 things to convert plain text into ciphertext:
-- Fragment Frame which is result of:
-  1. Integrity Algorithm which is made of:
-   - MIC key
-   - Station MAC + Destination MAC + priority bits
-   - Sequence Counter
-  2. Plaintext
 - RC4 encryption of Temporal key mixing which is made of:
   1. Temporal Key (PTK)
   2. Station MAC
   3. Sequence Counter
+- Fragment Frame which is result of:
+  1. Plaintext
+  2. Sequence Counter
+  3. Integrity Algorithm which is made of:
+   - MIC key
+   - Station MAC + Destination MAC + priority bits
 
 These 2 are XORed to compose the ciphertext, with an IV coming from RC4.
 

@@ -215,3 +215,240 @@ Controllers usually depends on 3 values to create new output:
 Just like laplace transforms can be used in continuous systems to obtain transfer function, in discrete systems we can use Z transform to the same effect, but instead of getting them in s domain we use Z domain, we given they are interchangeable between them means we can convert continuous systems in discrete systems.
 
 This transition will lose some of the meaning given to continuous/discrete system.
+
+# PID
+
+The PID controller is an Closed Loop controller in which we use 3 terms to obtain new controls.
+
+The 3 terms are combined by:
+$$u(t)=K_pe(t) + K_i\int^t_0 + K_d\frac{de(t)}{dt}$$
+
+This $u(t)$ value is then passed to the actuator to be used on the system.
+
+The terms influence the output:
+- P - Proportional, the present
+- I - Integral, the past
+- D - Derivative, the future
+
+Higher P -> More overshoot, faster response and steady-state != 0
+
+Higher I -> Smaller Overshoot, slower response and steady-state = 0
+
+Higher D -> Smaller Overshoot, faster response and steady-state != 0
+
+In order to optimize the values we must:
+- Set $K_p,K_i,K_d$ to zero
+- Increase $K_p$ until the values oscillate steadily, and take note of the current $K_p$ and oscillation period
+- Design the controller based on those values
+
+# Control Systems
+
+Microcontroller is a small computer in a single integrated board, which is normally used to control CPS's
+
+Microprocessor is the CPU for the microcontroller, the defining characteristics of a microprocessor are:
+- Energy Usage - Needs to be small
+- Memory - Needs to store: program, stack, data
+- Clock Frequency - Several hundred MHz
+- I/O pins - Needs a large variety and number of I/O pins
+- Internal Functions
+
+
+There are 2 implementations of I/O Pins
+   - Port I/O - Devices are registered to ports
+      - are defined in a separate address space
+      - use different methods to interact with them
+      - these methods can be dependant on the MCU
+      - requires special hardware to protect
+      - reads and writes can be bound to operation triggers
+   - Memory Mapped I/O - Devices are registered to regular address space 
+      - use normal memory management methods 
+      - use memory protections mechanisms to be protected
+      - always use normal memory management methods, therefore aren't dependant on MCU
+      - Allows for more flexibility
+
+## Arduino
+
+Digital inputs - Can be HIGH(5VDC) or LOW(0VDC)
+
+Analog inputs - Can be range of numbers from 0 to 1023
+
+Programs are called sketches, and need to have 2 functions:
+- setup: runs first and once
+- loop: runs over and over
+
+Pulse-Width Modulation: a technique in which we change the values of the output for a pin at a certain frequency with the intention of changing the average power level of the signal in that pin.
+This allows for the possibility of encoding information in a transmission which is only on or off.
+
+Duty cycle is the amount of time per pulse, in which the signal is on a HIGH/on state.
+
+
+# Real-Time Operating Systems
+
+The main differences between RealTime Os's and general use OS's are:
+- Real-time requires always predictable behavior, with timing guarantees and under worst case scenario
+- General use can be most of the time good behavior, with high throughput under normal behavior 
+
+Advantages of a RealTime kernel:
+- Abstracting away timing information, kernel is responsible for timing therefore allowing simpler application design
+- Easier Testing - Tasks can be independent of other modules, allowing for test in isolation
+- Idle time utilization - Idle task can execute while there are no other tasks being run, it can be used to perform background checks or place process into low-power mode.
+
+Why the linux kernel isn't realtime:
+- Kernel can't be preempted
+- Applications run in user space
+- Hardware interaction is done in the kernel
+
+To convert linux kerne into RT we can use a patch which changes:
+- Adds a RT scheduler for RT tasks, and a non RT scheduler for non RT tasks
+- RT coexists with linux tasks but has a higher priority
+- Events, which are traps or interrupts, cause disturbances in the execution of commands
+- RTLinux has priority over events processing them before linux
+- ADEOS (Adaptive Domain Environment for Operating Systems) is used for event management
+
+ADEOS offers a virtualization layers between OS and hardware and allows events to be cascaded through domains
+
+## Xenomai
+
+Time values are stored in timespec structures
+
+clockid_t is a data types used to store real-time clock, it can be used in modes:
+- CLOCK_REALTIME - Represents a real-time clock
+- CLOCK_MONOTONIC - Represents the time since system startup
+
+It is possible to define scheduling approaches by providing an algorithm and attributes
+
+To avoid starvation we should use resource reservations, or use algorithms with dynamic priorities like EDF.
+
+Concurrency can be solved by 2 means in Xenomai
+- Mutexes
+- Condition variables
+
+## FreeRTOS
+
+Tasks have their own context and no knowledge of the scheduler, the scheduler defines its own activity and context switching
+
+Tasks have 4 states:
+- Ready - Able to execute, but not executing because of higher priority task
+- Running - Actively executing
+- Blocked - Waiting for temporal event
+- Suspended - Only possible if suspended through API calls
+
+Each task has a priority between 0 and MAX_priority, and tasks can change their own and other tasks priorities.
+
+Idle task is created on boot up, and is used to free up memory of tasks that have been deleted and therefore it is essential that the idle task is not starved.
+
+Concurrency can be solved using:
+- Counting Semaphores
+- Mutexes
+- Binary Semaphores
+
+
+# Wireless Sensor Networks
+
+WSN are wireless networks composed by thousands of independent nodes which are used to monitor physical and environmental conditions.
+
+Nodes must be:
+- Small size and low cost
+- Low energy and computational requirements
+- Not require battery replacement
+- Self-organizing
+
+The network should:
+- Have ad hoc deployment, therefore need nearest-neighbor communication
+- No battery changes requires efficient usage of energy
+- Scalable and reliable, with self-configuration and good coverage
+- Data collection should be clustered or centralized(even though centralized puts more strain in some nodes)
+
+ZigBee is a type of WSN:
+- Composed of 3 types of nodes
+  - Coordinator - Maintains the state of the network, there is only one per network and requires more resources 
+  - Router - Node that forwards messages to end devices
+  - End device - Node responsible for producing data, may be asleep most of the time
+
+Design Challenges:
+- Heterogeneity of devices
+- Distributed Processing
+- Real Time Computation
+
+
+# CAN and ProfiBus
+
+## CAN
+
+CAN or controller area network is a type of network system which is based on different nodes connecting to a BUS which is shared across all nodes to transport messages.
+
+Instead of using 0 and 1 to represent bits CAN uses 2 signals CANHigh and CANLow, the subtraction of the values of the 2 signals is used to obtain the final value of the signal.
+
+This is used to minimize the effect of noise upon the BUS, and it leads to having 2 output signals:
+- 0 - Dominant Bit
+- 1 - Recessive Bit
+
+At any time the BUS can only have one Bit value.
+
+The Bus is composed of 2 wires to assure tolerance to faults.
+
+Packets have unique identifiers, which are used for bus arbitration and therefore there is no need for source/destination addresses
+
+When sending a packet, the identifier is the firs to be transmitted if the node notices that a value put in the bus doesn't correspond to the value it reads from the bus it detects a conflict (when the node puts a recessive bit in the bus and reads a dominant bit). After a conflict is detected the bus passes from sending mode to receiving node.
+
+This implies identifiers with more 0's in the left have higher priority, therefore smaller values of identifier have higher priority
+
+The packets are sent in a specified form where some field are specifically left as recessive in order to allow receiver with error to ask for retransmission
+
+The ACK bit is put to recessive by the sender, if any node receives it correctly passes it to dominant indicating to the sender that at least one node received the packet correctly.
+
+Errors are usually solved by retransmission, errors can originate from:
+- bit errors - mismatch between transmitted and received bits
+- bit-stuffing errors - stream with more than 5 consecutive same value bits
+- CRC error - mismatch between sent and received CRC (CRC is similar to a checksum every node calculates autonomously, if it mismatches the recessive bit is passed to dominant)
+- ACK error - lack of ACK in the ACK slot
+- form error - violation of frame fixed form
+
+Moreover every 5 consecutive bits with the same value, there is a flipped bit in order to assure synchronization.
+
+
+## Profibus
+
+ProfiBus is a type of fieldbus based on a tree type topology.
+
+There are 2 types of nodes: master and slave
+
+Masters poll slaves for frames.
+
+Nodes use tokens to access the bus, a the token is passed around the master nodes based on a TTRT (Target Token Rotation Time).
+
+
+## TTP
+
+Time Triggered Protocol it is similar to profibus with a master/slave dynamic.
+
+But uses aditionally:
+- FTU (Fault Tolerant Unit) - replicates nodes
+- Broadcast bus
+- Clock Synchronization
+- Periodic message exchanges
+
+Regarding the Bus it is:
+- replicated to assure space redundancy
+- duplicated broadcasts to assure time redundancy
+
+FTU are clusters of nodes executing the same computations in order to assure fault tolerance, there are different levels of FTU:
+- Class 1
+  - One node per FTU
+  - 2 frames per FTU, one on each bus
+- Class 2
+  - Two nodes per FTU
+  - 2 frames per FTU, each node on one bus
+- Class 3
+  - Two nodes per FTU
+  - 4 frames per FTU, 2 for each node on one bus
+- Class 4
+  - Two nodes per FTU and one shadow node, the shadow node does the same as other nodes but doesn't transmit to bus
+  - 4 frames per FTU
+
+FTU frame types:
+- I-Frame
+  - used for initialization
+  - also used to re-sync nodes to cluster
+- N-Frame
+  - used for normal messages

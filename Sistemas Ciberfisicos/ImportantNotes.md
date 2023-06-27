@@ -266,6 +266,8 @@ There are 2 implementations of I/O Pins
       - always use normal memory management methods, therefore aren't dependant on MCU
       - Allows for more flexibility
 
+GPIO are the general design of the input/output device, they usually represent a single bit.
+
 ## Arduino
 
 Digital inputs - Can be HIGH(5VDC) or LOW(0VDC)
@@ -359,16 +361,17 @@ The network should:
 - Scalable and reliable, with self-configuration and good coverage
 - Data collection should be clustered or centralized(even though centralized puts more strain in some nodes)
 
+Design Challenges:
+- Heterogeneity of devices - Networks might be constituted of many different device types
+- Distributed Processing - Centralized algorithms are costly, processing should be decentralized
+- Real Time Computation - Computation should be done quickly given new data is always being generated
+- Utilization of resources - maximize performance with lowest energy cost 
+
 ZigBee is a type of WSN:
 - Composed of 3 types of nodes
   - Coordinator - Maintains the state of the network, there is only one per network and requires more resources 
   - Router - Node that forwards messages to end devices
   - End device - Node responsible for producing data, may be asleep most of the time
-
-Design Challenges:
-- Heterogeneity of devices
-- Distributed Processing
-- Real Time Computation
 
 
 # CAN and ProfiBus

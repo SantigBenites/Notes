@@ -7,7 +7,9 @@
         "Missbeahavior",
         "PBFT",
         "Schedulability",
+        "schedulable",
         "supermajority",
+        "timeframe",
         "USIG"
     ]
 }

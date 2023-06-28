@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "ADEOS",
         "ciphertext",
         "Diffie",
         "Feistel",
@@ -10,6 +11,7 @@
         "schedulable",
         "supermajority",
         "timeframe",
-        "USIG"
+        "USIG",
+        "Xenomai"
     ]
 }

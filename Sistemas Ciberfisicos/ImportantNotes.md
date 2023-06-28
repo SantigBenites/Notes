@@ -96,7 +96,7 @@ Solution protocols
 - Original Ceiling Priority Protocol
   - Each task has a static default priority
   - Each resource has a static ceiling priority, which is equivalent to the maximum priority of all tasks using the resource
-  - Each task has a dynamic priority which is the maximum of its own priority and any it inherits from higher blocking-priority tasks
+  - Each task has a dynamic priority which is the maximum of its own priority and any it inherits from blocking higher priority tasks
 - Immediate Ceiling Priority Protocol
   - Each task has a static default priority
   - Each resource has a static ceiling priority, which is equivalent to the maximum priority of all tasks using the resource
@@ -132,7 +132,7 @@ Clocks are defined based on 3 values:
 - Accuracy : Difference between 1 clock and the real time
 - Granularity  : Maximum clock increment
 
-Clock drift, is an accuracy in which a clocks value drifts at a certain rate from the real time and therefore needs resynchronization every so often.
+Clock drift, is what happens when a clocks value drifts at a certain rate from the real time and therefore needs resynchronization every so often.
 
 Clock synchronization can be made in 2 ways:
 - Internal - Based on clocks inside the network, and therefore only assures precision
@@ -169,9 +169,9 @@ The design and analysis of CPS's requires quantitative models describing the dyn
 
 ## Continuous Models
 
-Continuous models require Differential equations to describe themselfs.
+Continuous models require Differential equations to describe themselves.
 
-This is caused becuase these systems are usually physical in nature, and physics is represented by differential equations.
+This is caused because these systems are usually physical in nature, and physics is represented by differential equations.
 
 These equations are usually obtained from physical laws.
 
@@ -212,7 +212,9 @@ Controllers usually depends on 3 values to create new output:
 - Past error values
 - Past controller outputs
 
-Just like laplace transforms can be used in continuous systems to obtain transfer function, in discrete systems we can use Z transform to the same effect, but instead of getting them in s domain we use Z domain, we given they are interchangeable between them means we can convert continuous systems in discrete systems.
+Just like laplace transforms can be used in continuous systems to obtain the transfer function, in discrete systems we can use Z transform to the same effect, but instead of getting them in s(seconds) domain we use Z domain.
+
+Given they are interchangeable between them means we can convert continuous systems in discrete systems.
 
 This transition will lose some of the meaning given to continuous/discrete system.
 
@@ -259,12 +261,12 @@ There are 2 implementations of I/O Pins
       - use different methods to interact with them
       - these methods can be dependant on the MCU
       - requires special hardware to protect
-      - reads and writes can be bound to operation triggers
    - Memory Mapped I/O - Devices are registered to regular address space 
       - use normal memory management methods 
       - use memory protections mechanisms to be protected
       - always use normal memory management methods, therefore aren't dependant on MCU
       - Allows for more flexibility
+      - reads and writes can be bound to operation triggers
 
 GPIO are the general design of the input/output device, they usually represent a single bit.
 
@@ -286,7 +288,7 @@ Duty cycle is the amount of time per pulse, in which the signal is on a HIGH/on 
 
 # Real-Time Operating Systems
 
-The main differences between RealTime Os's and general use OS's are:
+The main differences between RealTime OS's and general use OS's are:
 - Real-time requires always predictable behavior, with timing guarantees and under worst case scenario
 - General use can be most of the time good behavior, with high throughput under normal behavior 
 
@@ -300,7 +302,7 @@ Why the linux kernel isn't realtime:
 - Applications run in user space
 - Hardware interaction is done in the kernel
 
-To convert linux kerne into RT we can use a patch which changes:
+To convert linux kernel into RT we can use a patch which changes:
 - Adds a RT scheduler for RT tasks, and a non RT scheduler for non RT tasks
 - RT coexists with linux tasks but has a higher priority
 - Events, which are traps or interrupts, cause disturbances in the execution of commands
@@ -410,7 +412,7 @@ Errors are usually solved by retransmission, errors can originate from:
 Moreover every 5 consecutive bits with the same value, there is a flipped bit in order to assure synchronization.
 
 
-## Profibus
+## ProfiBus
 
 ProfiBus is a type of fieldbus based on a tree type topology.
 

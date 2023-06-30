@@ -5,8 +5,8 @@ A cyber-physical system is defined as a physical system whose operations are mon
 A real-time system is system whose progression is defined in terms of timeliness based on the requirements of the environment, and whose actions need to be synchronized with the same environment.
 
 There are 3 types of RT systems:
-- Soft RT - Timing failures must be avoided
-- Hard RT - Occasional timing failures must be avoided, but can be accepted
+- Soft RT - Occasional timing failures are accepted
+- Hard RT - Timing failures must be avoided
 - Mission-Critical RT - Occasional timing failures must be avoided, and must be handled with exceptions
 
 Deadlines must be met both during normal operation and faulty operation
@@ -117,8 +117,8 @@ To this effect detection of timing failures should be:
 The relationship between the elements of the environment (RTe RealTime entity) and their computational counterparts (RTr RealTime representative), is essential to represent CPS's.
 
 Certain characteristics need to be maintained:
-- Temporal accuracy - Defines a bound in time at which RTe and RTr need to be the same
-- Temporal validity - Defines an interval at which RTr is correct  
+- Temporal accuracy - Defines a bound $\epsilon$ for the acceptable difference between RTe and RTr
+- Temporal validity - Defines an interval at which RTr is correct, based on accuracy
 
 
 ## Time and Clocks
@@ -141,6 +141,10 @@ Clock synchronization can be made in 2 ways:
 and can be dependant on 2 methods
 - Software-Based - Synchronized through messages, while inexpensive it is harder to achieve high clock precision
 - Hardware-Based - Synchronized through direct communication, while expensive the precision is very high
+
+Internal protocols can be:
+- averaging - Collects all clock readings and value is based on all readings, precision is based on variability of time of each clock read
+- non-averaging - Syncs all clocks to the value presented by the first clock to send sync message, precision is based maximum delivery delay.
 
 ## Input/Output
 
@@ -175,12 +179,14 @@ This is caused because these systems are usually physical in nature, and physics
 
 These equations are usually obtained from physical laws.
 
-Representation:
-- State : Smallest set of variables, which can be used to describe the system for $t>T_0$
-- State Vector $x(t)$: Vector of derivatives of n state variables at time t
-- State Space : n-dimensional space whose coordinates axes relate to the state variables
-- State Trajectory : Path at which $x(t)$ evolves
-- Transfer Function : Function able to describe the entire the state of a system given input. Function that models the system when given input. Usually obtained using a laplace transform over the differential equations
+There are 2 main representations possible for these systems:
+- State Space representation
+  - State : Smallest set of variables, which can be used to describe the system for $t>T_0$
+  - State Vector $x(t)$: Vector of derivatives of n state variables at time t
+  - State Space : n-dimensional space whose coordinates axes relate to the state variables
+  - State Trajectory : Path at which $x(t)$ evolves
+- Transfer Function representation
+  - Transfer Function : Function able to describe the entire the state of a system given input. Function that models the system when given input. Usually obtained using a laplace transform over the differential equations
 
 These systems usually can be categorized:
 - Causality
@@ -457,3 +463,29 @@ FTU frame types:
   - also used to re-sync nodes to cluster
 - N-Frame
   - used for normal messages
+
+
+# Big Data and Machine Learning
+
+Apache Spark is a Data Science framework 
+- Available for multiple languages, java, C, Rust ...
+- Unified analytics for large scale data processing
+- Cache of data, and intermediate results
+
+There are 3 types of learning
+- Supervised Learning - Labelled data, with the intention of approximating a certain function from the training data, this function will be used to input data and get a desired output
+- Unsupervised Learning - Unlabelled data, with the intention of clustering data into classes, the learner doesn't have information regarding which points belong to which class
+- Reinforcement Learning - There is no data, only an agent which interacts with the environment and gets rewards for the actions it does over the environment.
+
+Federated Learning is a type of learning where we train models locally and combine them in a central node with the intention of generating a global model without having to send all data to the central node.
+- Horizontal - Same feature set, different samples
+- Vertical - Different feature set, same samples
+
+Time Series types:
+- One-Step-Ahead
+- One-Step-Ahead (auto-regressive with exogenous inputs)
+- Recursive
+- Direct
+- MIMO(Multiple Input, Multiple Output)
+- Hybrid (Recursive and Direct)
+- Hybrid (Direct and MIMO)

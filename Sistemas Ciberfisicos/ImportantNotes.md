@@ -400,7 +400,7 @@ The Bus is composed of 2 wires to assure tolerance to faults.
 
 Packets have unique identifiers, which are used for bus arbitration and therefore there is no need for source/destination addresses
 
-When sending a packet, the identifier is the firs to be transmitted if the node notices that a value put in the bus doesn't correspond to the value it reads from the bus it detects a conflict (when the node puts a recessive bit in the bus and reads a dominant bit). After a conflict is detected the bus passes from sending mode to receiving node.
+When sending a packet, the identifier is the first to be transmitted if the node notices that a value put in the bus doesn't correspond to the value it reads from the bus it detects a conflict (when the node puts a recessive bit in the bus and reads a dominant bit). After a conflict is detected the bus passes from sending mode to receiving node.
 
 This implies identifiers with more 0's in the left have higher priority, therefore smaller values of identifier have higher priority
 
@@ -416,6 +416,15 @@ Errors are usually solved by retransmission, errors can originate from:
 - form error - violation of frame fixed form
 
 Moreover every 5 consecutive bits with the same value, there is a flipped bit in order to assure synchronization.
+
+Error confinement:
+- Every node has multiple ways to detect errors (seen above)
+- Each node stores 2 values TEC (Transmit Error Counter) and REC (Receive Error Counter)
+- If either TEC or REC exceeds a certain value the node is put into a error warning state
+- If the error warning state exceeds a certain time value the node passes to error passive state, in which the node can listen to the bus but is refrained from participating in the connection
+- If the condition worsens by either TEC or REC exceeding a value, then the node is put into Bus-Off state, in which it is unable to participate in either sending or receiving messages from the bus
+- It will remain in Bus-Off state for a specific time until it tries to reconnect
+- After a certain time, the node will retry to enter communication monitoring both REC and TEC, if these remain in normal levels it continues in communication, if they don't the node goes inactive.
 
 
 ## ProfiBus
